@@ -1,11 +1,9 @@
-import './eventTypeFilters';
-import jQuery from 'jquery';
-import * as d3 from 'd3';
+import zeptojs from 'zeptojs';
+import d3 from 'd3-selection';
 import L from 'leaflet';
 import moment from 'moment';
 import * as Cookies from 'js-cookie';
-var $ = jQuery;
-var leaflet = L;
+const $ = zeptojs;
 
 //Create an event node
 function Event(properties) {
@@ -59,60 +57,9 @@ function Event(properties) {
 
 
   this.render = function (distance, zipcode) {
-
     var that = this;
-
-    // var endtime = that.endTime ? moment(that.endTime).format("h:mma") : null;
-
-    if ( this.props.event_type === 'Group' ) {
-      return that.render_group(distance, zipcode)
-    } else {
-      return that.render_event(distance, zipcode)
-    }
+    return that.render_event(distance, zipcode)
   }
-
-  this.render_group = function(distance, zipcode) {
-    var that = this;
-
-
-    var lat = that.props.lat
-    var lon = that.props.lng
-
-    var social_html = '';
-
-    // console.log(that.props.event_type)
-    if (that.props.social) {
-      if (that.props.social.facebook !== '') { social_html += `<a href='${that.props.social.facebook}' target='_blank'><img src='/images/icon/facebook.png' /></a>`; }
-      if (that.props.social.twitter !== '') { social_html += `<a href='${that.props.social.twitter}' target='_blank'><img src='/images/icon/twitter.png' /></a>`; }
-      if (that.props.social.email !== '') { social_html += `<a href='mailto:${that.props.social.email}' ><img src='/images/icon/mailchimp.png' /></a>`; }
-      if (that.props.social.phone !== '') { social_html += `&nbsp;<img src='/images/icon/phone.png' /><span>${that.props.social.phone}</span>`; }
-    }
-
-    var new_window = true;
-    if ( that.props.url.match(/^mailto/g) ) {
-      new_window = false;
-    }
-
-    var rendered = $("<div class=montserrat/>")
-      .addClass('event-item ' + that.className)
-      .html(`
-        <div class="event-item lato ${that.className}" lat="${lat}" lon="${lon}">
-          <h5 class="time-info">
-            <span class="time-info-dist">${distance ?  distance + "mi&nbsp;&nbsp;" : ""}</span>
-          </h5>
-          <h3>
-            <a ${new_window ? 'target="_blank"' : ''} href="${that.props.url}">${that.props.title}</a>
-          </h3>
-          <span class="label-icon"></span>
-          <h5 class="event-type">${that.props.event_type}</h5>
-          <div class='event-social'>
-            ${social_html}
-          </div>
-        </div>
-        `);
-
-    return rendered.html();
-  };
 
   this.render_event = function(distance, zipcode) {
     var that = this;
@@ -171,7 +118,7 @@ function MapManager(eventData, campaignOffices, zipcodes, options) {
 
   // var mapboxTiles = leaflet.tileLayer('http://{s}.tiles.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=' + leaflet.mapbox.accessToken, { attribution: '<a href="http://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'});
 
-  var mapboxTiles = leaflet.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+  var mapboxTiles = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
     maxZoom: 18,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;<a href="https://carto.com/attribution">CARTO</a>'
   });
@@ -191,7 +138,7 @@ function MapManager(eventData, campaignOffices, zipcodes, options) {
   });
   var defaultCoord = options&&options.defaultCoord ? options.defaultCoord : {center: [37.8, -96.9], zoom: 4};
 
-  var centralMap =  new leaflet
+  var centralMap =  new L
                         .Map("map-container", window.customMapCoord ? window.customMapCoord : defaultCoord)
                         .addLayer(mapboxTiles);
   if(centralMap) {}
@@ -219,28 +166,26 @@ function MapManager(eventData, campaignOffices, zipcodes, options) {
                   || $(d.properties.filters).not(current_filters).length != d.properties.filters.length);
       }).sort(function(a, b) { return b.props.attending - a.props.attending; });
 
+      const superInsides = filtered.map(function(d) {
+        return $("<li class=montserrat/>")
+          .attr('data-attending', (function(prop) {
+              var email = Cookies.get('map.bnc.email');
+              var events_attended_raw = Cookies.get('map.bnc.eventsJoined.' + email);
+              var events_attended = events_attended_raw ? JSON.parse(events_attended_raw) : [];
+              return $.inArray(prop.id_obfuscated, events_attended) > -1;
+
+            })(d.properties))
+          .addClass(d.isFull?"is-full":"not-full")
+          .addClass(d.visible ? "is-visible" : "not-visible")
+          .append(d.render());
+      })
+
+      const insides = $("<ul class='popup-list'>")
+      superInsides.forEach(el => insides.append(el))
+
       var div = $("<div />")
         .append(filtered.length > 1 ? "<h3 class='sched-count'>" + filtered.length + " Results</h3>" : "")
-        .append(
-        $("<div class='popup-list-container'/>")
-          .append($("<ul class='popup-list'>")
-            .append(
-              filtered.map(function(d) {
-                return $("<li class=montserrat/>")
-                          .attr('data-attending', (function(prop) {
-                              var email = Cookies.get('map.bnc.email');
-                              var events_attended_raw = Cookies.get('map.bnc.eventsJoined.' + email);
-                              var events_attended = events_attended_raw ? JSON.parse(events_attended_raw) : [];
-                              return $.inArray(prop.id_obfuscated, events_attended) > -1;
-
-                            })(d.properties))
-                          .addClass(d.isFull?"is-full":"not-full")
-                          .addClass(d.visible ? "is-visible" : "not-visible")
-                          .append(d.render());
-              })
-            )
-          )
-        );
+        .append($("<div class='popup-list-container'/>").append(insides));
 
 
       setTimeout(
@@ -339,7 +284,7 @@ function MapManager(eventData, campaignOffices, zipcodes, options) {
 
   var filterEventsByCoords = function (center, distance, filterTypes) {
 
-    var zipLatLng = leaflet.latLng(center);
+    var zipLatLng = L.latLng(center);
 
     var filtered = eventsList.filter(function(d) {
       var dist = toMile(zipLatLng.distanceTo(d.props.LatLng));
