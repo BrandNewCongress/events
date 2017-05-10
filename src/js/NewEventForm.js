@@ -3,6 +3,7 @@
 import React from 'react'
 import Api from './api'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import muiTheme from './bnc-theme'
 import TextField from 'material-ui/TextField'
 import DatePicker from 'material-ui/DatePicker'
 import TimePicker from 'material-ui/TimePicker'
@@ -42,9 +43,9 @@ const initialState : State = {
     hostName: '',
     hostEmail: '',
     hostPhone: '',
-    date: new Date(),
-    startTime: new Date(),
-    endTime: new Date(),
+    date: null,
+    startTime: null,
+    endTime: null,
   },
   venue: {
     name: '',
@@ -76,6 +77,7 @@ export default class NewEventForm extends React.Component<void, Props, State> {
     event.preventDefault()
     console.log(this.state);
     this.setState({ submitStatus: 'Pending' })
+
     // Api.create.event({
     //   name: this.state.details.name,
     //   intro: this.state.details.intro,
@@ -86,6 +88,7 @@ export default class NewEventForm extends React.Component<void, Props, State> {
     //   end_time: this.state.details.endTime.toISOString(),
     //   venue: this.state.venue
     // })
+
     new Promise((resolve, reject) => {
       setTimeout(() => {
         Math.random() > 0.8 ? reject() : resolve()
@@ -152,7 +155,7 @@ export default class NewEventForm extends React.Component<void, Props, State> {
 
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div
           ref={el => this.container = el}
           className="newEventModal"
@@ -190,10 +193,10 @@ export default class NewEventForm extends React.Component<void, Props, State> {
 
             <div className="newEventActions">
               <div className="buttonContainer">
-                <RaisedButton onClick={this.submit} fullWidth>Submit</RaisedButton>
+                <RaisedButton onClick={() => this.props.onRequestClose()} fullWidth>Cancel</RaisedButton>
               </div>
               <div className="buttonContainer">
-                <RaisedButton onClick={() => this.props.onRequestClose()} fullWidth>Cancel</RaisedButton>
+                <RaisedButton primary onClick={this.submit} fullWidth>Submit</RaisedButton>
               </div>
             </div>
           </form>
