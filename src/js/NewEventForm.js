@@ -2,12 +2,6 @@
 
 import React from 'react'
 import Api from './api'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import muiTheme from './bnc-theme'
-import TextField from 'material-ui/TextField'
-import DatePicker from 'material-ui/DatePicker'
-import TimePicker from 'material-ui/TimePicker'
-import RaisedButton from 'material-ui/RaisedButton'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
@@ -43,9 +37,9 @@ const initialState : State = {
     hostName: '',
     hostEmail: '',
     hostPhone: '',
-    date: null,
-    startTime: null,
-    endTime: null,
+    date: undefined,
+    startTime: undefined,
+    endTime: undefined,
   },
   venue: {
     name: '',
@@ -57,105 +51,8 @@ const initialState : State = {
 }
 
 export default class NewEventForm extends React.Component<void, Props, State> {
-  state = initialState
-
-  container: ?HTMLElement
-
-  reset = () => {
-    this.setState(initialState)
-  }
-
-  updateDetails = (property: string) => (_: any, newValue: string | Date) => {
-    this.setState({ details: { ...this.state.details, [property]: newValue } })
-  }
-
-  updateVenue = (property: string) => (_: any, newValue: string) => {
-    this.setState({ venue: { ...this.state.venue, [property]: newValue } })
-  }
-
-  submit = (event: Event) => {
-    event.preventDefault()
-    console.log(this.state);
-    this.setState({ submitStatus: 'Pending' })
-
-    // Api.create.event({
-    //   name: this.state.details.name,
-    //   intro: this.state.details.intro,
-    //   host_name: this.state.details.hostName,
-    //   host_email: this.state.details.hostEmail,
-    //   host_phone: this.state.details.hostPhone,
-    //   start_time: this.state.details.startTime.toISOString(),
-    //   end_time: this.state.details.endTime.toISOString(),
-    //   venue: this.state.venue
-    // })
-
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        Math.random() > 0.8 ? reject() : resolve()
-      }, 2000)
-    })
-    .then(() => {
-      this.setState({ submitStatus: 'Success' })
-      this.props.onRequestClose()
-    })
-    .catch(() => {
-      this.setState({ submitStatus: 'Failure' })
-    })
-  }
-
-  renderDetailsInput(type: string, label: string, property: string, placeholder: string) {
-    return (
-      <div>
-        {(type === 'text' || type === 'textarea') &&
-          <TextField
-            name={property}
-            value={this.state.details[property]}
-            onChange={this.updateDetails(property)}
-            floatingLabelText={label}
-            multiLine={type === 'textarea'}
-            fullWidth
-          />
-        }
-        {type === 'date' &&
-          <DatePicker
-            name={property}
-            autoOk
-            floatingLabelText={label}
-            value={this.state.details[property]}
-            onChange={this.updateDetails(property)}
-            fullWidth
-          />
-        }
-        {type === 'time' &&
-          <TimePicker
-            name={property}
-            floatingLabelText={label}
-            value={this.state.details[property]}
-            onChange={this.updateDetails(property)}
-            fullWidth
-          />
-        }
-      </div>
-    )
-  }
-
-  renderVenueInput(label: string, property: string, placeholder: string) {
-    return (
-      <div>
-        <TextField
-          name={property}
-          value={this.state.venue[property]}
-          onChange={this.updateVenue(property)}
-          floatingLabelText={label}
-          fullWidth
-        />
-      </div>
-    )
-  }
-
   render() {
     return (
-      <MuiThemeProvider muiTheme={muiTheme}>
         <div
           ref={el => this.container = el}
           className="newEventModal"
@@ -173,7 +70,7 @@ export default class NewEventForm extends React.Component<void, Props, State> {
               <div className="newEventDetails">
                 <h3>Event Details</h3>
                 {this.renderDetailsInput('text', 'Event Name', 'name', 'What is the name of the event?')}
-                {this.renderDetailsInput('textarea', 'Intro', 'intro', 'What should people know about the event?')}
+                {this.renderDetailsInput('textarea', 'Description', 'intro', 'What should people know about the event?')}
                 {this.renderDetailsInput('text', 'Host Name', 'hostName', 'Who is hosting the event?')}
                 {this.renderDetailsInput('text', 'Host Email', 'hostEmail', 'Where can we contact the host by email?')}
                 {this.renderDetailsInput('text', 'Host Phone', 'hostPhone', 'Where can we contact the host by phone?')}
@@ -193,15 +90,118 @@ export default class NewEventForm extends React.Component<void, Props, State> {
 
             <div className="newEventActions">
               <div className="buttonContainer">
-                <RaisedButton onClick={() => this.props.onRequestClose()} fullWidth>Cancel</RaisedButton>
+                <button className="btn btn-default" onClick={() => this.props.onRequestClose()}>Cancel</button>
               </div>
               <div className="buttonContainer">
-                <RaisedButton primary onClick={this.submit} fullWidth>Submit</RaisedButton>
+                <button className="btn btn-primary" onClick={this.submit}>Submit</button>
               </div>
             </div>
           </form>
         </div>
-      </MuiThemeProvider>
+    )
+  }
+
+  state = initialState
+
+  container: ?HTMLElement
+
+  reset = () => {
+    this.setState(initialState)
+  }
+
+  updateDetails = (property: string) => (ev: Event) => {
+    this.setState({ details: { ...this.state.details, [property]: ev.target.value } })
+  }
+
+  updateVenue = (property: string) => (ev: Event) => {
+    this.setState({ venue: { ...this.state.venue, [property]: ev.target.value } })
+  }
+
+  submit = (event: Event) => {
+    event.preventDefault()
+    this.setState({ submitStatus: 'Pending' })
+
+    console.log({
+      name: this.state.details.name,
+      intro: this.state.details.intro,
+      host_name: this.state.details.hostName,
+      host_email: this.state.details.hostEmail,
+      host_phone: this.state.details.hostPhone,
+      start_time: new Date(this.state.details.date + " " + this.state.details.startTime).toISOString(),
+      end_time: new Date(this.state.details.date + " " + this.state.details.endTime).toISOString(),
+      venue: this.state.venue
+    })
+
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        Math.random() > 0.8 ? reject() : resolve()
+      }, 2000)
+    })
+    .then(() => { 
+      this.setState({ submitStatus: 'Success' })
+      this.props.onRequestClose()
+    })
+    .catch(() => {
+      this.setState({ submitStatus: 'Failure' })
+    })
+  }
+
+  renderDetailsInput(type: string, label: string, property: string, placeholder: string) {
+    return (
+      <div className="form-element">
+        <label className="label">{label}</label>
+        {(type === 'text') &&
+          <input
+            className="form-control"
+            type={type}
+            name={property}
+            value={this.state.details[property]}
+            onChange={this.updateDetails(property)}
+          />
+        }
+        {type === 'textarea' &&
+          <textarea
+            className="form-control"
+            name={property}
+            value={this.state.details[property]}
+            onChange={this.updateDetails(property)}
+          >
+          </textarea>
+        }
+        {type === 'date' &&
+          <input
+            className="form-control"
+            type={type}
+            name={property}
+            value={this.state.details[property]}
+            onChange={this.updateDetails(property)}
+          />
+        }
+        {type === 'time' &&
+          <input
+            className="form-control"
+            type={type}
+            name={property}
+            value={this.state.details[property]}
+            onChange={this.updateDetails(property)}
+          />
+        }
+      </div>
+    )
+  }
+
+  renderVenueInput(label: string, property: string, placeholder: string) {
+    return (
+      <div className="form-element">
+        <label className="label">{label}</label>
+        <input
+          type="text"
+          name={property}
+          value={this.state.venue[property]}
+          placeholder={placeholder}
+          onChange={this.updateVenue(property)}
+        />
+      </div>
     )
   }
 }
