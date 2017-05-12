@@ -75,8 +75,10 @@ export default class NewEventForm extends React.Component<void, Props, State> {
                 {this.renderDetailsInput('text', 'Host Email', 'hostEmail', 'Where can we contact the host by email?')}
                 {this.renderDetailsInput('text', 'Host Phone', 'hostPhone', 'Where can we contact the host by phone?')}
                 {this.renderDetailsInput('date', 'Event Date', 'date', '')}
-                {this.renderDetailsInput('time', 'Start Time', 'startTime', '')}
-                {this.renderDetailsInput('time', 'End Time', 'endTime', '')}
+                <div className="timeFields">
+                  {this.renderDetailsInput('time', 'Start Time', 'startTime', '')}
+                  {this.renderDetailsInput('time', 'End Time', 'endTime', '')}
+                </div>
               </div>
 
               <div className="newEventVenue">
@@ -121,16 +123,16 @@ export default class NewEventForm extends React.Component<void, Props, State> {
     event.preventDefault()
     this.setState({ submitStatus: 'Pending' })
 
-    console.log({
-      name: this.state.details.name,
-      intro: this.state.details.intro,
-      host_name: this.state.details.hostName,
-      host_email: this.state.details.hostEmail,
-      host_phone: this.state.details.hostPhone,
-      start_time: new Date(this.state.details.date + " " + this.state.details.startTime).toISOString(),
-      end_time: new Date(this.state.details.date + " " + this.state.details.endTime).toISOString(),
-      venue: this.state.venue
-    })
+    // Api.create.event({
+    //   name: this.state.details.name,
+    //   intro: this.state.details.intro,
+    //   host_name: this.state.details.hostName,
+    //   host_email: this.state.details.hostEmail,
+    //   host_phone: this.state.details.hostPhone,
+    //   start_time: new Date(this.state.details.date + " " + this.state.details.startTime).toISOString(),
+    //   end_time: new Date(this.state.details.date + " " + this.state.details.endTime).toISOString(),
+    //   venue: this.state.venue
+    // })
 
     new Promise((resolve, reject) => {
       setTimeout(() => {
