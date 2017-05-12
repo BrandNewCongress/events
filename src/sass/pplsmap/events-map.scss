@@ -67,6 +67,33 @@ body {
       height: 100px;
     }
   }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 2px;
+    box-shadow: none;
+    font-size: 16px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .btn-default {
+    background: none;
+    border: none;
+    color: #666;
+    border: 1px solid #666;
+    &:hover {
+      border-color: #444;
+      color: #444;
+    }
+  }
+  .btn-primary {
+    background: #7932AC;
+    border: 1px solid #7932AC;
+    color: white;
+    &:hover {
+      background: #411b5d;
+    }
+  }
 }
 
 .newEventInputs {
