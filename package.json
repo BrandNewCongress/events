@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --watch",
+    "dev": "webpack-dev-server --port 3000 --watch",
     "build": "NODE_ENV=production webpack"
   },
   "devDependencies": {
@@ -27,10 +27,13 @@
     "d3-dsv": "^1.0.5",
     "d3-selection": "^1.0.6",
     "deparam": "^1.0.5",
+    "inferno-compat": "^3.1.2",
     "jquery": "^3.2.1",
     "js-cookie": "^2.1.4",
     "leaflet": "0.7.2",
     "moment": "^2.18.1",
+    "preact": "^8.1.0",
+    "preact-compat": "^3.16.0",
     "react": "^15.5.4",
     "react-click-outside": "^2.3.1",
     "react-dom": "^15.5.4",

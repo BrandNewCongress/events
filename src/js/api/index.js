@@ -4,12 +4,12 @@
  * Client for BNC event API build on top of superagent
  */
 
-const request = require('superagent');
-const tv4 = require('tv4');
-let base = 'https://api.brandnewcongress.org';
+const request = require('superagent')
+const tv4 = require('tv4')
+let base = 'https://api.brandnewcongress.org'
 
 const resolver = (resolve, reject) => (err, res) =>
-  (err ? reject(err) : resolve(res.body));
+  err ? reject(err) : resolve(res.body)
 
 const validate = {
   event: body =>
@@ -22,30 +22,31 @@ const validate = {
         'host_phone',
         'start_time',
         'end_time',
-        'venue',
+        'time_zone',
+        'venue'
       ],
       type: 'object',
       properties: {
-        name: {type: 'string'},
-        intro: {type: 'string'},
-        start_time: {type: 'string'},
-        end_time: {type: 'string'},
-        host_name: {type: 'string'},
-        host_email: {type: 'string'},
-        host_phone: {type: 'string'},
-        end_time: {type: 'string'},
-        time_zone: {type: 'string'},
+        name: { type: 'string' },
+        intro: { type: 'string' },
+        start_time: { type: 'string' },
+        end_time: { type: 'string' },
+        host_name: { type: 'string' },
+        host_email: { type: 'string' },
+        host_phone: { type: 'string' },
+        end_time: { type: 'string' },
+        time_zone: { type: 'string' },
         venue: {
           required: ['name', 'address', 'city', 'state'],
           type: 'object',
           properties: {
-            name: {type: 'string'},
-            address: {type: 'string'},
-            city: {type: 'string'},
-            state: {type: 'string'},
-          },
-        },
-      },
+            name: { type: 'string' },
+            address: { type: 'string' },
+            city: { type: 'string' },
+            state: { type: 'string' }
+          }
+        }
+      }
     }),
 
   rsvp: body =>
@@ -53,60 +54,58 @@ const validate = {
       required: ['email', 'guests_count', 'volunteer', 'phone', 'name'],
       type: 'object',
       proprties: {
-        email: {type: 'string'},
-        guests_count: {type: 'string'},
-        volunteer: {type: 'boolean'},
-        phone: {type: 'string'},
-        name: {type: 'string'},
-      },
-    }),
-};
+        email: { type: 'string' },
+        guests_count: { type: 'string' },
+        volunteer: { type: 'boolean' },
+        phone: { type: 'string' },
+        name: { type: 'string' }
+      }
+    })
+}
 
 const get = {
   events: params =>
     new Promise((resolve, reject) => {
-      request
-        .get(`${base}/events`)
-        .query(params)
-        .end(resolver(resolve, reject));
-    })
-    .then(data => data.filter(d => d.venue.address !== null).map(d => ({
-      event_type: 'Event',
-      start_datetime: d.startTime,
-      venue: d.venue.name,
-      lat: parseFloat(d.venue.address.lat),
-      lng: parseFloat(d.venue.address.lng),
-      supergroup: 'Brand New Congress',
-      attending: 0,
-      formatType: 'events-etl',
-      group: null,
-      title: d.title,
-      url: d.url
-    }))),
+      request.get(`${base}/events`).query(params).end(resolver(resolve, reject))
+    }).then(data =>
+      data.filter(d => d.venue.address !== null).map(d => ({
+        event_type: 'Event',
+        start_datetime: d.startTime,
+        venue: d.venue.name,
+        lat: parseFloat(d.venue.address.lat),
+        lng: parseFloat(d.venue.address.lng),
+        supergroup: 'Brand New Congress',
+        attending: 0,
+        formatType: 'events-etl',
+        group: null,
+        title: d.title,
+        url: d.url
+      }))
+    ),
 
   candidates: () =>
     new Promise((resolve, reject) => {
-      request.get(`${base}/events/candidates`).end(resolver(resolve, reject));
-    }),
-};
+      request.get(`${base}/events/candidates`).end(resolver(resolve, reject))
+    })
+}
 
 const create = {
   event: (candidate, event) =>
     new Promise((resolve, reject) => {
-      const ok = validate.event(event);
-      if (!ok) return reject(tv4.error);
+      const ok = validate.event(event)
+      if (!ok) return reject(tv4.error)
 
       request
         .post(`${base}/events/create`)
-        .query({candidate})
+        .query({ candidate })
         .send(event)
-        .end(resolver(resolve, reject));
+        .end(resolver(resolve, reject))
     }),
 
   rsvp: (eventId, rsvp) =>
     new Promise((resolve, reject) => {
-      const ok = validate.rsvp(rsvp);
-      if (!ok) return reject(tv4.error);
+      const ok = validate.rsvp(rsvp)
+      if (!ok) return reject(tv4.error)
 
       request
         .post(`${base}/events/${eventId}/rsvp`)
@@ -117,13 +116,13 @@ const create = {
             Array.isArray(err.response.body.validation_errors)
           ) {
             if (err.response.body.validation_errors[0].includes('signup_id')) {
-              return resolve('You have already RSVPed');
+              return resolve('You have already RSVPed')
             }
           }
 
-          return resolver(resolve, reject)(err, res);
-        });
-    }),
-};
+          return resolver(resolve, reject)(err, res)
+        })
+    })
+}
 
-export default {get, create};
+module.exports = { get, create }

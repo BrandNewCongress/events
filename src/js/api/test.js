@@ -11,15 +11,15 @@
 const api = require('./index')
 
 const go = async () => {
-  const events = await api.get.events()
-  console.log(events)
-
-  const candidates = await api.get.candidates()
-  console.log(candidates)
-
-  const eventsForCori = await api.get.events({ candidate: 'coribush' })
-  console.log(eventsForCori)
-
+  // const events = await api.get.events()
+  // console.log(events)
+  //
+  // const candidates = await api.get.candidates()
+  // console.log(candidates)
+  //
+  // const eventsForCori = await api.get.events({ candidate: 'coribush' })
+  // console.log(eventsForCori)
+  //
   const testEvent = {
     name: 'Test Event',
     intro: 'This is just a test event',
@@ -37,19 +37,20 @@ const go = async () => {
     }
   }
 
-  const testEventCreationResult = await api.create.event('coribush', testEvent)
+  console.log(testEvent)
+  const testEventCreationResult = await api.create.event('Cori Bush', testEvent)
   console.log(testEventCreationResult)
-
-  const testRSVP = {
-    email: 'ben.paul.ryan.packer@gmail.com',
-    guests_count: 0,
-    volunteer: false,
-    phone: '2147010869',
-    name: 'Ben Packer'
-  }
-
-  const testRSVPCreationResult = await api.create.rsvp(303, testRSVP)
-  console.log(testRSVPCreationResult)
+  //
+  // const testRSVP = {
+  //   email: 'ben.paul.ryan.packer@gmail.com',
+  //   guests_count: 0,
+  //   volunteer: false,
+  //   phone: '2147010869',
+  //   name: 'Ben Packer'
+  // }
+  //
+  // const testRSVPCreationResult = await api.create.rsvp(303, testRSVP)
+  // console.log(testRSVPCreationResult)
 }
 
 go().catch(console.error)
