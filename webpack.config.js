@@ -19,29 +19,43 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['babel-preset-es2015', 'babel-preset-react', 'babel-preset-flow'],
-            plugins: ['transform-object-rest-spread', 'transform-class-properties']
+            presets: [
+              'babel-preset-es2015',
+              'babel-preset-react',
+              'babel-preset-flow'
+            ],
+            plugins: [
+              'transform-object-rest-spread',
+              'transform-class-properties'
+            ]
           }
         }
       },
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        use: debug ? [{
-          loader: 'style-loader'
-        }, {
-          loader: 'css-loader', options: {
-              sourceMap: true
-          }
-        }, {
-          loader: 'sass-loader', options: {
-              sourceMap: true
-          }
-        }] :
-        ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader!sass-loader'
-        }),
+        use: debug
+          ? [
+              {
+                loader: 'style-loader'
+              },
+              {
+                loader: 'css-loader',
+                options: {
+                  sourceMap: true
+                }
+              },
+              {
+                loader: 'sass-loader',
+                options: {
+                  sourceMap: true
+                }
+              }
+            ]
+          : ExtractTextPlugin.extract({
+              fallback: 'style-loader',
+              use: 'css-loader!sass-loader'
+            })
       }
     ]
   },
@@ -49,25 +63,34 @@ module.exports = {
     path: path.join(__dirname, 'build'),
     filename: '[name].js'
   },
-  plugins: debug ?
-    [
-      new HtmlPlugin({
-        filename: 'index.html',
-        template: './index.html',
-        inject: true
-      })
-    ] :
-    [
-      new ExtractTextPlugin('styles.css'),
-      new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-      new HtmlPlugin({
-        filename: 'index.html',
-        template: './index.html',
-        inject: true
-      }),
-      new CopyPlugin([
-        { from: 'images', to: 'images' },
-        { from: 'fonts', to: 'fonts' }
-      ])
-    ],
-};
+  resolve: {
+    alias: {
+      react: 'preact-compat',
+      'react-dom': 'preact-compat'
+    }
+  },
+  plugins: debug
+    ? [
+        new HtmlPlugin({
+          filename: 'index.html',
+          template: './index.html',
+          inject: true
+        })
+      ]
+    : [
+        new ExtractTextPlugin('styles.css'),
+        new webpack.optimize.UglifyJsPlugin({
+          mangle: false,
+          sourcemap: false
+        }),
+        new HtmlPlugin({
+          filename: 'index.html',
+          template: './index.html',
+          inject: true
+        }),
+        new CopyPlugin([
+          { from: 'images', to: 'images' },
+          { from: 'fonts', to: 'fonts' }
+        ])
+      ]
+}

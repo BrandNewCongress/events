@@ -41,6 +41,59 @@ body {
   max-width: 100%;
   max-height: 100%;
   overflow-y: auto;
+
+  h3 {
+    padding-bottom: 20px;
+  }
+
+  .form-element {
+    display: flex;
+    flex-direction: column;
+    > .label {
+      font-size: 12px;
+      padding-bottom: 5px;
+    }
+    > input {
+      height: 30px;      
+    }
+    > input, textarea {
+      border: 1px solid #e0e0e0;
+      margin-bottom: 10px;
+      border-radius: 2px;
+      font-size: 14px;
+      padding-left: 5px;
+    }
+    > textarea {
+      height: 100px;
+    }
+  }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 2px;
+    box-shadow: none;
+    font-size: 16px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .btn-default {
+    background: none;
+    border: none;
+    color: #666;
+    border: 1px solid #666;
+    &:hover {
+      border-color: #444;
+      color: #444;
+    }
+  }
+  .btn-primary {
+    background: #7932AC;
+    border: 1px solid #7932AC;
+    color: white;
+    &:hover {
+      background: #411b5d;
+    }
+  }
 }
 
 .newEventInputs {
@@ -50,6 +103,16 @@ body {
 .newEventDetails {
   width: 50%;
   padding: 16px;
+  > .timeFields {
+    display: flex;
+    justify-content: space-between;
+    > .form-element {
+      flex-grow: 1;
+      &:first-child {
+        margin-right: 10px;
+      }
+    }
+  }
 }
 
 .newEventVenue {
