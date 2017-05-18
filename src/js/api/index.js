@@ -71,7 +71,9 @@ const get = {
       data.filter(d => d.venue.address !== null).map(d => ({
         event_type: 'Event',
         start_datetime: d.startTime,
+        end_datetime: d.endTime,
         venue: d.venue.name,
+        intro: d.intro,
         lat: parseFloat(d.venue.address.lat),
         lng: parseFloat(d.venue.address.lng),
         supergroup: 'Brand New Congress',

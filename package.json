@@ -31,7 +31,6 @@
     "jquery": "^3.2.1",
     "js-cookie": "^2.1.4",
     "leaflet": "0.7.2",
-    "moment": "^2.18.1",
     "preact": "^8.1.0",
     "preact-compat": "^3.16.0",
     "react": "^15.5.4",
