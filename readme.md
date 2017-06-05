@@ -10,3 +10,8 @@
 - `yarn run build`
 - `pushstate-server --port 8080 ./build`
 - `open http://localhost:8080`
+
+# TODO
+- ?candidate=""
+- guide
+- sensical url params

@@ -112,7 +112,7 @@ function Event(properties) {
           <p>${that.props.address}</p>
           <p>${that.props.intro || ''}</p>
           <div>
-            <a class="rsvp-link" href="${that.props.url}" target="_blank">DETAILS</a>
+            <a class="rsvp-link" href="${that.props.url}" target="_blank">DETAILS/RSVP</a>
             <span class="time-info-dist" style="float: right; padding-top: 10px">${distance ? distance + 'mi&nbsp;&nbsp;' : ''}</span>
           </div>
         </div>

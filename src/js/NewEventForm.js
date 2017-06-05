@@ -75,7 +75,7 @@ export default class NewEventForm extends React.Component<void, Props, State> {
                   value={this.state.candidate}
                   onChange={ev => this.setState({ candidate: ev.target.value })}
                 >
-                  {this.state.candidateOptions.map(c => (
+                  {this.state.candidateOptions.sort().map(c => (
                     <option value={c}>{c}</option>
                   ))}
                 </select>
@@ -94,19 +94,19 @@ export default class NewEventForm extends React.Component<void, Props, State> {
               )}
               {this.renderDetailsInput(
                 'text',
-                'Host Name',
+                'Your Name',
                 'hostName',
                 'Who is hosting the event?'
               )}
               {this.renderDetailsInput(
                 'text',
-                'Host Email',
+                'Your Email',
                 'hostEmail',
                 'Where can we contact the host by email?'
               )}
               {this.renderDetailsInput(
                 'text',
-                'Host Phone',
+                'Your Phone',
                 'hostPhone',
                 'Where can we contact the host by phone?'
               )}
