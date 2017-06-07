@@ -39,7 +39,7 @@
             <a href="javascript: void(null)" onclick="window.mapManager.toListView()" id="to-list-view">Show List</a>
           </h3>
           <h4 class="lato title">
-            <span id="screen-title">Filters</span>
+            <span id="screen-title">Find an event</span>
             <div id="mobile-title">
               <img src="/images/logo.png" alt="">
               <span class="brand-title">Brand New Congress</span>
@@ -76,10 +76,10 @@
             </table>
 
             <div id="filter-popup-area" class="montserrat">
-              <a href="javascript: void(null)" class="filter-button show-filter" onclick="$('#events').addClass('show-type-filter');">
+              <a href="javascript: void(null)" class="filter-button show-filter" style="display: none;" onclick="$('#events').addClass('show-type-filter');">
                 Search by Type
               </a>
-              <div id="filter-list-area">
+              <div id="filter-list-area" style="display: none;">
                 <h5>Search by Type</h5>
                 <div id="f-container">
                   <div id="filter-list-container">
