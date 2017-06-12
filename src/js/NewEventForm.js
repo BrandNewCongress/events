@@ -75,9 +75,9 @@ export default class NewEventForm extends React.Component<void, Props, State> {
                   value={this.state.candidate}
                   onChange={ev => this.setState({ candidate: ev.target.value })}
                 >
-                  {this.state.candidateOptions.sort().map(c => (
-                    <option value={c}>{c}</option>
-                  ))}
+                  {this.state.candidateOptions
+                    .sort()
+                    .map(c => <option value={c}>{c}</option>)}
                 </select>
               </div>
               {this.renderDetailsInput(
@@ -182,7 +182,8 @@ export default class NewEventForm extends React.Component<void, Props, State> {
             </div>
           </div>
 
-          <div style={{
+          <div
+            style={{
               textAlign: 'center',
               fontSize: 'larger'
             }}
@@ -200,7 +201,7 @@ export default class NewEventForm extends React.Component<void, Props, State> {
       .then(candidateOptions => this.setState({ candidateOptions }))
   }
 
-  state = initialState
+  state = Object.assign({}, initialState)
 
   container: ?HTMLElement
 
@@ -230,15 +231,21 @@ export default class NewEventForm extends React.Component<void, Props, State> {
         host_name: this.state.details.hostName,
         host_email: this.state.details.hostEmail,
         host_phone: this.state.details.hostPhone,
-        start_time: this.state.details.date +
-          ' ' +
-          this.state.details.startTime,
+        start_time:
+          this.state.details.date + ' ' + this.state.details.startTime,
         end_time: this.state.details.date + ' ' + this.state.details.endTime,
         time_zone: this.state.details.time_zone,
         venue: this.state.venue
       })
       .then(body => {
-        this.setState({ submitStatus: 'Success' })
+        const newState = Object.assign({}, initialState, {
+          submitStatus: 'Success',
+          candidate: this.state.candidate,
+          candidateOptions: this.state.candidateOptions
+        })
+
+        this.setState(newState)
+
         setTimeout(() => this.props.onRequestClose(), 1000)
       })
       .catch(err => {
