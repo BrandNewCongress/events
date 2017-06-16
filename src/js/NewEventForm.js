@@ -221,9 +221,9 @@ export default class NewEventForm extends Component {
                 <br />
                 {this.renderDetailsInput(
                   'text',
-                  'Event Name',
+                  'Name: Activity at Location',
                   'name',
-                  'Weekend Canvassing'
+                  `Phone Bank at Paula's House`
                 )}
                 <br />
                 {this.renderDetailsInput(
