@@ -6,7 +6,7 @@
 
 const request = require('superagent')
 const tv4 = require('tv4')
-let base = 'https://api.brandnewcongress.org'
+window.base = 'https://api.brandnewcongress.org'
 
 const resolver = (resolve, reject) => (err, res) =>
   err ? reject(err) : resolve(res.body)
@@ -66,7 +66,7 @@ const validate = {
 const get = {
   events: params =>
     new Promise((resolve, reject) => {
-      request.get(`${base}/events`).query(params).end(resolver(resolve, reject))
+      request.get(`${window.base}/events`).query(params).end(resolver(resolve, reject))
     }).then(data =>
       data.filter(d => d.venue.address !== null).map(d => ({
         event_type: 'Event',
@@ -87,7 +87,7 @@ const get = {
 
   candidates: () =>
     new Promise((resolve, reject) => {
-      request.get(`${base}/events/candidates`).end(resolver(resolve, reject))
+      request.get(`${window.base}/events/candidates`).end(resolver(resolve, reject))
     })
 }
 
@@ -98,7 +98,7 @@ const create = {
       if (!ok) return reject(tv4.error)
 
       request
-        .post(`${base}/events/create`)
+        .post(`${window.base}/events/create`)
         .query({ candidate })
         .send(event)
         .end(resolver(resolve, reject))
@@ -110,7 +110,7 @@ const create = {
       if (!ok) return reject(tv4.error)
 
       request
-        .post(`${base}/events/${eventId}/rsvp`)
+        .post(`${window.base}/events/${eventId}/rsvp`)
         .send(rsvp)
         .end((err, res) => {
           if (

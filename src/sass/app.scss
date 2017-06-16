@@ -1,12 +1,10 @@
 
 // Fonts
 @import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+@import "~antd/dist/antd.css";
 
 // Variables
 @import "variables";
-
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
 @import "~leaflet/dist/leaflet.css";
 
@@ -22,4 +20,9 @@
 
 .leaflet-container {
 	font-family: "Roboto"
+}
+
+label {
+	margin-top: 5px;
+	margin-bottom: 2px;
 }

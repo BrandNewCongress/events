@@ -22,14 +22,18 @@ module.exports = {
             presets: [
               'babel-preset-es2015',
               'babel-preset-react',
-              'babel-preset-flow'
             ],
             plugins: [
               'transform-object-rest-spread',
-              'transform-class-properties'
+              'transform-class-properties',
+              ['import', { libraryName: 'antd', style: 'css' }]
             ]
           }
         }
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
       },
       {
         test: /\.scss$/,
@@ -64,10 +68,10 @@ module.exports = {
     filename: '[name].js'
   },
   resolve: {
-    alias: {
-      react: 'preact-compat',
-      'react-dom': 'preact-compat'
-    }
+    // alias: {
+    //   react: 'react-lite',
+    //   'react-dom': 'react-lite'
+    // }
   },
   plugins: debug
     ? [
