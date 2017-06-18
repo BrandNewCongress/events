@@ -20,9 +20,9 @@ function Event(properties) {
   this.props.intro = properties.intro
   this.props.supergroup = properties.supergroup
 
-  // Remove the timezone issue from
   this.props.start_time = new Date(properties.start_datetime)
   this.props.end_time = new Date(properties.end_datetime)
+  this.props.offset = properties.timeZoneOffset
   this.props.group = properties.group
   this.props.LatLng = [parseFloat(properties.lat), parseFloat(properties.lng)]
   this.props.event_type = properties.event_type
@@ -76,14 +76,22 @@ function Event(properties) {
     const startDate = new Date(that.props.start_time)
     const endDate = new Date(that.props.end_time)
 
+    startDate.getLocalHours = function (offset) {
+      return this.getUTCHours() + offset
+    }
+
+    endDate.getLocalHours = function (offset) {
+      return this.getUTCHours() + offset
+    }
+
     const startF = {
       weekDay: days[startDate.getDay()],
       monthDate: `${months[startDate.getMonth()]} ${startDate.getDate()}`,
-      time: `${startDate.getHours() % 12 || 12}${startDate.getMinutes() ? ':' + startDate.getMinutes() : ''} ${startDate.getHours() > 12 ? 'PM' : 'AM'}`
+      time: `${startDate.getLocalHours(that.props.offset) % 12 || 12}${startDate.getMinutes() ? ':' + startDate.getMinutes() : ''} ${startDate.getLocalHours(that.props.offset) > 12 ? 'PM' : 'AM'}`
     }
 
     const endF = {
-      time: `${endDate.getHours() % 12 || 12}${endDate.getMinutes() ? ':' + endDate.getMinutes() : ''} ${endDate.getHours() > 12 ? 'PM' : 'AM'}`
+      time: `${endDate.getLocalHours(that.props.offset) % 12 || 12}${endDate.getMinutes() ? ':' + endDate.getMinutes() : ''} ${endDate.getLocalHours(that.props.offset) > 12 ? 'PM' : 'AM'}`
     }
 
     const lat = that.props.lat

@@ -72,6 +72,7 @@ const get = {
         event_type: 'Event',
         start_datetime: d.startTime,
         end_datetime: d.endTime,
+        timeZoneOffset: parseInt(d.timeZoneOffset.split(':')[0]),
         venue: d.venue.name,
         intro: d.intro,
         lat: parseFloat(d.venue.address.lat),
