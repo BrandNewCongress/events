@@ -91,11 +91,11 @@ function Event(properties) {
     const startF = {
       weekDay: days[startDate.getDay()],
       monthDate: `${months[startDate.getMonth()]} ${startDate.getDate()}`,
-      time: `${startDate.getLocalHours(that.props.offset) % 12 || 12}${startDate.getMinutes() ? ':' + startDate.getMinutes() : ''} ${startDate.getLocalHours(that.props.offset) > 12 ? 'PM' : 'AM'}`
+      time: `${startDate.getLocalHours(that.props.offset) % 12 || 12}${startDate.getMinutes() ? ':' + startDate.getMinutes() : ''} ${startDate.getLocalHours(that.props.offset) >= 12 ? 'PM' : 'AM'}`
     }
 
     const endF = {
-      time: `${endDate.getLocalHours(that.props.offset) % 12 || 12}${endDate.getMinutes() ? ':' + endDate.getMinutes() : ''} ${endDate.getLocalHours(that.props.offset) > 12 ? 'PM' : 'AM'}`
+      time: `${endDate.getLocalHours(that.props.offset) % 12 || 12}${endDate.getMinutes() ? ':' + endDate.getMinutes() : ''} ${endDate.getLocalHours(that.props.offset) >= 12 ? 'PM' : 'AM'}`
     }
 
     const lat = that.props.lat
