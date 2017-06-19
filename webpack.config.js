@@ -3,6 +3,7 @@ const debug = process.env.NODE_ENV !== 'production'
 const webpack = require('webpack')
 const HtmlPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
@@ -95,6 +96,7 @@ module.exports = {
         new CopyPlugin([
           { from: 'images', to: 'images' },
           { from: 'fonts', to: 'fonts' }
-        ])
+        ]),
+        new BundleAnalyzerPlugin()
       ]
 }
