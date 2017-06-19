@@ -77,11 +77,15 @@ function Event(properties) {
     const endDate = new Date(that.props.end_time)
 
     startDate.getLocalHours = function (offset) {
-      return this.getUTCHours() + offset
+      let base = this.getUTCHours() + offset
+      if (base < 0) return 24 + base
+      return base
     }
 
     endDate.getLocalHours = function (offset) {
-      return this.getUTCHours() + offset
+      let base = this.getUTCHours() + offset
+      if (base < 0) return 24 + base
+      return base
     }
 
     const startF = {
