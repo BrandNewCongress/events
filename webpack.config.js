@@ -21,8 +21,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              'babel-preset-es2015',
-              'babel-preset-react',
+              'babel-preset-es2015'
             ],
             plugins: [
               'transform-object-rest-spread',
@@ -67,12 +66,6 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'build'),
     filename: '[name].js'
-  },
-  resolve: {
-    // alias: {
-    //   react: 'react-lite',
-    //   'react-dom': 'react-lite'
-    // }
   },
   plugins: debug
     ? [
